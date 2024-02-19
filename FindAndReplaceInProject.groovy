@@ -1,80 +1,102 @@
-/*
-*
-* Find and Replace in Project
-*
-* Author: Philip Combiths
-* Created: 2024-02-10
-* Modified: 2024-02-10
-*/
-import javax.swing.JOptionPane
-
-import ca.phon.ipa.IPATranscript
-import ca.phon.project.Project
-import ca.phon.session.Session
-import ca.phon.session.Record
+import ca.phon.app.session.editor.view.find_and_replace.FindAndReplaceEditorView
+import ca.phon.app.session.editor.view.record_data.FindAndReplacePanel
+import ca.phon.app.session.editor.search.FindExpr
 import ca.phon.app.session.editor.search.FindManager
-// import ca.phon.session.editor.search.FindManager
-// import ca.phon.session.editor.search.*
+import ca.phon.session.Session
+import ca.phon.session.Tier
+import ca.phon.session.SessionPath
+import ca.phon.app.session.editor.SessionEditor
 
+import ca.phon.util.Tuple;
 
-
-import ca.phon.app.log.BufferPanel
-import ca.phon.app.project.ProjectWindow
-import ca.phon.project.Project
-import ca.phon.session.*
-import ca.phon.ui.nativedialogs.*
-import ca.phon.ui.toast.ToastFactory
-
-import ca.phon.app.session.SessionSelector
-import ca.phon.ui.CommonModuleFrame
-import ca.phon.ui.decorations.DialogHeader
-import ca.phon.ui.layout.ButtonBarBuilder
-
-
-import javax.swing.JButton
-import javax.swing.JDialog
-import javax.swing.JFrame
-import javax.swing.JScrollPane
-import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-
-
-
-// Method
-public void findReplace(Session session, String tierName) {
-    def findManager = new FindManager(session)
-    def searchString = "find_this_string"
-    def replaceString = "replace_with_this_string"
+if(window instanceof SessionEditor) {
+    final SessionEditor editor = (SessionEditor)window;
+    Session session = editor.getSession();
     
-    // Perform the find and replace operation
-    def result = findManager.findAndReplace(searchString, replaceString)
+    
+    // FindManager - works
+    FindManager findManager = new FindManager(session);
+    // FindAndReplaceEditorView
+    FindAndReplaceEditorView findAndReplaceView = new FindAndReplaceEditorView(editor);
 
-    // Process the result
-    println "Find and replace result: $result"
+    // findAndReplaceView.getAnyTierExpr()
+    tier = "IPA Target"
+    FindExpr findExpr = new FindExpr("h")
+    findManager.setAnyExpr(findExpr)
+    // out.println("currentLocation : $findManager.getCurrentLocation()")
+    def cur = findManager.getCurrentLocation()
+    def next = findManager.getNextLocation()
+    out.println("cur : $cur")
+    out.println("next : $next")
 
-    // // Track modified records
-    // // int recordsModifiedInSession = 0
-    // session.records.each { Record record ->
-    //     Tier<?> tier = record.getTier(tierName)
-    //     if(tier != null) {
-    //         tier.forEach { Object value ->
-    //             if(value instanceof IPATranscript) {
-    //                 IPATranscript ipa = (IPATranscript) value
-    //                 String original = ipa.text
-    //                 String modified = original.replaceAll(findPhonex, replacePhonex)
-    //                 if(!original.equals(modified)) {
-    //                     ipa.text = modified
-    //                     // recordsModifiedInSession++
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    // findManager.setCurrentLocation(findManager.getCurrentLocation())
+    
+    out.println("session.records : $findManager.session.records")
+    out.println("session.name : $findManager.session.name")
+    out.println("expr : $findExpr.expr")
+    out.println("type : $findExpr.type")
+    out.println("direction : $findManager.direction")
+    out.println("lastEpr : $findManager.lastExpr")
+    out.println("searchTiers : $findManager.searchTiers")
+    // out.println("nextLocation: $findManager.getNextLocation()")
+    out.println("tierExpr : $findManager.tierExprs")
+    // out.println("findNext: $findManager.findNext()")
+    // out.println("nextLocation: $findManager.getNextLocation()")
+
+
+    // findManager.setCurrentLocation(findAndReplaceView.getSessionLocation()); // Set the starting location
+    // out.println(findManager.findNext())
+    //  out.println(findAndReplaceView.getSessionLocation())
+    
+    
+    // findAndReplaceView.findNext(); // Perform the search
+    // out.printlin(findAndReplaceView.findNext())
+
+    // findAndReplaceView.setExpr()
 
 
 
+
+    String orthographyTierName = "Orthography";
+    String orthographyExpression = "h";
+
+
+    // FindExpr orthographyExpr = new FindExpr(orthographyExpression);
+    // findAndReplaceView.setExpr();
+
+    
+    // findAndReplaceView
+
+
+    // findAndReplaceView.exprForTier(orthographyTierName).setExpr(orthographyExpr);
+
+
+    // findAndReplaceEditorView.getAnyTierExp()
+    
+    // findAndReplaceView.replaceAll()
+
+
+    // String[] searchTiers = findAndReplaceView.getSearchTiers();
+    // findManager.setSearchTier(getSearchTiers());
+
+
+// FindAndReplacePanel findAndReplacePanel = FindAndReplacePanel(editor)
+    // FindAndReplaceEditorView findAndReplaceView = new FindAndReplaceEditorView(editor);
+    
+    // FindManager findManager = SessionEditor.getFindManager(session);
+    // out.println(findManager)
+
+
+
+
+    //FindAndReplaceEditorView findAndReplaceView = new FindAndReplaceEditorView(editor);
+
+    // Set up the search tiers and options
+    // Tier<String> anyTier = findAndReplaceView.searchTiers.get("IPA Target");
+    // anyTier.setGroup(0, "h");  
+
+    // out.println(session.getName());
+    // out.println(findAndReplaceView);
 }
 
 
@@ -84,174 +106,52 @@ public void findReplace(Session session, String tierName) {
 
 
 
-// Create SessionSelectorDialog
-class SessionSelectorDialog extends JDialog {
-
-    Project project;
-
-    SessionSelector sessionSelector;
-
-    JButton okBtn;
-
-    JButton cancelBtn;
-
-    boolean wasCanceled = false;
-
-    def out;
-
-    public SessionSelectorDialog(Project project, String title, def out) {
-        super(CommonModuleFrame.getCurrentFrame());
-        setTitle(title);
-        this.project = project;
-        this.out = out;
-        init();
-    }
-
-    private void init() {
-        setLayout(new BorderLayout());
-
-        final DialogHeader header = new DialogHeader("Find and Replace in Project",
-            "Find and replace in all selected sessions.");
-        add(header, BorderLayout.NORTH);
-
-        sessionSelector = new SessionSelector(project);
-        sessionSelector.setPreferredSize(new Dimension(250, 0));
-        add(new JScrollPane(sessionSelector), BorderLayout.CENTER);
-
-        okBtn = new JButton("Ok");
-        okBtn.addActionListener(new ActionListener() {
-            @Override
-            void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        })
-
-        cancelBtn = new JButton("Cancel");
-        cancelBtn.addActionListener(new ActionListener() {
-            @Override
-            void actionPerformed(ActionEvent e) {
-                wasCanceled = true;
-                setVisible(false);
-            }
-        })
-
-        def buttonBar = ButtonBarBuilder.buildOkCancelBar(okBtn, cancelBtn);
-        add(buttonBar, BorderLayout.SOUTH);
-    }
-
-}
-
-/* main */
-// When script is run from open project window...
-if(window instanceof ProjectWindow) {
-    SessionSelectorDialog frame = new SessionSelectorDialog(window.project, "Find and Replace in Project", out);
-    frame.pack();
-    frame.setModal(true);
-    frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-    frame.setSize(800, 600);
-    frame.setLocationRelativeTo(window);
-    frame.setVisible(true);
-    // .. frame is modal
-    // Session Selector window is closed...
-    if(!frame.wasCanceled) {
-        // Input parameters
-        def String findPhonex = JOptionPane.showInputDialog("Enter Phonex string to find:")
-        def String replacePhonex = JOptionPane.showInputDialog("Enter Phonex string to replace with:")
-        def String tierName = JOptionPane.showInputDialog("Enter tier to search (e.g., IPA Target):")
-
-        // Validate input
-        if(findPhonex == null || replacePhonex == null || tierName == null) {
-            ToastFactory.makeToast("Operation cancelled or invalid input.").start(projectWindow)
-            return
-        }
-
-        // int totalSessionsModified = 0
-        // int totalRecordsModified = 0
-
-
-        // For each selected session in project...
-        for(SessionPath sp:frame.sessionSelector.getSelectedSessions()) {
-            // Open session
-            try {
-                Session session = window.project.openSession(sp.getCorpus(), sp.getSession());
-                // Perform action
-                findReplace(session, tierName);
-                // Save session
-                def writeLock = window.project.getSessionWriteLock(session);
-                window.project.saveSession(session, writeLock);
-                window.project.releaseSessionWriteLock(session, writeLock);
-                // println "Modified $recordsModifiedInSession records in session: ${sessionPath}";
-            } catch (IOException e) {
-                out.println(e.getLocalizedMessage());
-                e.printStackTrace(out);
-            }
-			out.println("Unblind validated IPA Target added/overwritten to session " + sp);
-        }
-    }
-}
-        // if(recordsModifiedInSession > 0) {
-        //     totalSessionsModified++
-        //     totalRecordsModified += recordsModifiedInSession
-        //     project.saveSession(sessionPath, session)
-        //     println "Modified $recordsModifiedInSession records in session: ${sessionPath}"
-        // }
-
-// println "Total sessions modified: $totalSessionsModified"
-// println "Total records modified: $totalRecordsModified"
 
 
 
 
-/* main() */
-// Access the current project
 
 
-// ProjectWindow projectWindow = CommonModuleFrame.getCurrentFrame().getExtension(ProjectWindow.class)
-//def project = window.project
 
-// // Prompt user for input
-// String findPhonex = JOptionPane.showInputDialog("Enter Phonex string to find:")
-// String replacePhonex = JOptionPane.showInputDialog("Enter Phonex string to replace with:")
-// String tierName = JOptionPane.showInputDialog("Enter tier to search (e.g., IPA Target):")
 
-// // Validate input
-// if(findPhonex == null || replacePhonex == null || tierName == null) {
-//     ToastFactory.makeToast("Operation cancelled or invalid input.").start(projectWindow)
-//     return
-// }
+	// Saves before proceding
+    // editor.saveData();
 
-// int totalSessionsModified = 0
-// int totalRecordsModified = 0
+    /* Phon 3.4.X and earlier */
+    // editor.getEventManager().queueEvent(new EditorEvent(EditorEventType.RECORD_REFRESH_EVT));
+    /* Phon 3.5.0 and later */
+    // editor.getEventManager().queueEvent(new EditorEvent<>(EditorEventType.RecordRefresh, window, null));
 
-// // Iterate over each session
-// project.sessions.each { SessionPath sessionPath ->
-//     Session session = project.getSession(sessionPath)
-//     int recordsModifiedInSession = 0
 
-//     session.records.each { Record record ->
-//         Tier<?> tier = record.getTier(tierName)
-//         if(tier != null) {
-//             tier.forEach { Object value ->
-//                 if(value instanceof IPATranscript) {
-//                     IPATranscript ipa = (IPATranscript) value
-//                     String original = ipa.text
-//                     String modified = original.replaceAll(findPhonex, replacePhonex)
-//                     if(!original.equals(modified)) {
-//                         ipa.text = modified
-//                         recordsModifiedInSession++
-//                     }
-//                 }
-//             }
-//         }
-//     }
 
-//     if(recordsModifiedInSession > 0) {
-//         totalSessionsModified++
-//         totalRecordsModified += recordsModifiedInSession
-//         project.saveSession(sessionPath, session)
-//         println "Modified $recordsModifiedInSession records in session: ${sessionPath}"
-//     }
-// }
 
-// println "Total sessions modified: $totalSessionsModified"
-// println "Total records modified: $totalRecordsModified"
+// // Create a SessionEditor
+// // def sessionEditor = new SessionEditor(...) // Provide the necessary constructor arguments
+//     // SessionEditor(Project project, Session session, Transcriber transcriber)
+
+// session = project.openSession(sessionLoc.corpus, sessionLoc.session)
+
+
+
+// // Create a FindAndReplaceEditorView
+// def findAndReplaceView = new FindAndReplaceEditorView(sessionEditor)
+
+
+// // Set up the search criteria
+// def findExpr = findAndReplaceView.exprForTier('tierName')
+// findExpr.setExpr('searchString')
+// findExpr.setCaseSensitive(true)
+
+// // Set up the replace criteria
+// def replaceExpr = findAndReplaceView.exprForTier('replaceTierName')
+// replaceExpr.setExpr('replaceString')
+
+// // Perform the search and replace
+// def findManager = findAndReplaceView.getFindManager()
+// findManager.setSearchTier(['tierName']) // Provide the tier names to search
+// findManager.setReplaceTier(['replaceTierName']) // Provide the tier name to replace
+// findManager.replaceAll()
+
+// // Capture the output
+// // You'll need to implement a custom listener or observer to capture the changes made by the FindManager
+// // This is not shown in the example, as it depends on the specifics of your scripting environment
