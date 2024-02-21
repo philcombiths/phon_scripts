@@ -1,3 +1,5 @@
+// In Progress. Not yet working.
+
 /*
 *
 * Find and Replace in Project
@@ -15,9 +17,6 @@ import ca.phon.session.Record
 import ca.phon.app.session.editor.search.FindManager
 // import ca.phon.session.editor.search.FindManager
 // import ca.phon.session.editor.search.*
-
-
-
 import ca.phon.app.log.BufferPanel
 import ca.phon.app.project.ProjectWindow
 import ca.phon.project.Project
