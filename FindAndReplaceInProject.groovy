@@ -1,3 +1,10 @@
+/*
+
+Currently executing from an open Session window. Once working, apply iteratively over sessions in a project.
+Current issue is findNext() from FindManager object is not retreiving anything
+
+*/
+
 import ca.phon.app.session.editor.view.find_and_replace.FindAndReplaceEditorView
 import ca.phon.app.session.editor.view.record_data.FindAndReplacePanel
 import ca.phon.app.session.editor.search.FindExpr
@@ -12,7 +19,6 @@ import ca.phon.util.Tuple;
 if(window instanceof SessionEditor) {
     final SessionEditor editor = (SessionEditor)window;
     Session session = editor.getSession();
-    
     
     // FindManager - works
     FindManager findManager = new FindManager(session);
@@ -29,20 +35,30 @@ if(window instanceof SessionEditor) {
     out.println("cur : $cur")
     out.println("next : $next")
 
-    // findManager.setCurrentLocation(findManager.getCurrentLocation())
+    findManager.setCurrentLocation(findManager.getCurrentLocation())
+    def cur2 = findManager.getCurrentLocation()
+    out.println("cur2 : $cur2")
     
     out.println("session.records : $findManager.session.records")
     out.println("session.name : $findManager.session.name")
     out.println("expr : $findExpr.expr")
+    out.println("anyExpr : $findManager.anyExpr.expr")
     out.println("type : $findExpr.type")
     out.println("direction : $findManager.direction")
     out.println("lastEpr : $findManager.lastExpr")
     out.println("searchTiers : $findManager.searchTiers")
-    // out.println("nextLocation: $findManager.getNextLocation()")
     out.println("tierExpr : $findManager.tierExprs")
-    // out.println("findNext: $findManager.findNext()")
-    // out.println("nextLocation: $findManager.getNextLocation()")
+    out.println("getStatus : $findManager.findStatus")
 
+    String expression = "$findExpr.expr";
+}
+
+    // search for next instance of findExpr
+    // print instance, location, record, session information
+
+
+    // out.println("nextLocation: $findManager.getNextLocation()")
+    // out.println("findNext: $findManager.findNext()")
 
     // findManager.setCurrentLocation(findAndReplaceView.getSessionLocation()); // Set the starting location
     // out.println(findManager.findNext())
@@ -55,31 +71,7 @@ if(window instanceof SessionEditor) {
     // findAndReplaceView.setExpr()
 
 
-
-
-    String orthographyTierName = "Orthography";
-    String orthographyExpression = "h";
-
-
-    // FindExpr orthographyExpr = new FindExpr(orthographyExpression);
-    // findAndReplaceView.setExpr();
-
-    
-    // findAndReplaceView
-
-
-    // findAndReplaceView.exprForTier(orthographyTierName).setExpr(orthographyExpr);
-
-
-    // findAndReplaceEditorView.getAnyTierExp()
-    
-    // findAndReplaceView.replaceAll()
-
-
-    // String[] searchTiers = findAndReplaceView.getSearchTiers();
-    // findManager.setSearchTier(getSearchTiers());
-
-
+/* Partial Option 2 FindAndReplace Panel */
 // FindAndReplacePanel findAndReplacePanel = FindAndReplacePanel(editor)
     // FindAndReplaceEditorView findAndReplaceView = new FindAndReplaceEditorView(editor);
     
@@ -97,45 +89,17 @@ if(window instanceof SessionEditor) {
 
     // out.println(session.getName());
     // out.println(findAndReplaceView);
-}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// Saves before proceding
-    // editor.saveData();
-
-    /* Phon 3.4.X and earlier */
-    // editor.getEventManager().queueEvent(new EditorEvent(EditorEventType.RECORD_REFRESH_EVT));
-    /* Phon 3.5.0 and later */
-    // editor.getEventManager().queueEvent(new EditorEvent<>(EditorEventType.RecordRefresh, window, null));
-
-
-
-
+/* Partial Option 1 FindAndReplaceView */
 // // Create a SessionEditor
 // // def sessionEditor = new SessionEditor(...) // Provide the necessary constructor arguments
 //     // SessionEditor(Project project, Session session, Transcriber transcriber)
 
 // session = project.openSession(sessionLoc.corpus, sessionLoc.session)
 
-
-
 // // Create a FindAndReplaceEditorView
 // def findAndReplaceView = new FindAndReplaceEditorView(sessionEditor)
-
 
 // // Set up the search criteria
 // def findExpr = findAndReplaceView.exprForTier('tierName')
@@ -153,5 +117,4 @@ if(window instanceof SessionEditor) {
 // findManager.replaceAll()
 
 // // Capture the output
-// // You'll need to implement a custom listener or observer to capture the changes made by the FindManager
-// // This is not shown in the example, as it depends on the specifics of your scripting environment
+// // implement a custom listener or observer to capture the changes made by the FindManager
