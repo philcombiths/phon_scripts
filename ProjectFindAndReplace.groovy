@@ -59,11 +59,11 @@ import java.lang.reflect.Array
  *   - TIERS: tiers to search, a comma separated list or '*' for all tiers
  *   - SHOW_SESSION_SELECTOR: show a session selector dialog, otherwise perform action on all sessions
  */
-                 FIND = "hello";
-              REPLACE = "world";
+                 FIND = "s";
+              REPLACE = "s̪";
                  TYPE = "plain";
            MATCH_CASE = false;
-                TIERS = "*";
+                TIERS = "IPA Target";
 SHOW_SESSION_SELECTOR = true;
 /* End find and replace variables */
 
@@ -159,7 +159,7 @@ if(project == null) {
 
 def sessionPathList = new ArrayList<>();
 if(SHOW_SESSION_SELECTOR) {
-    SessionSelectorDialog frame = new SessionSelectorDialog(project, "Copy IPA to Blind Transcription", out);
+    SessionSelectorDialog frame = new SessionSelectorDialog(project, "Select sessions to modify. Warning: files will be overwritten!", out);
     frame.pack();
     frame.setModal(true);
     frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -234,8 +234,8 @@ class SessionSelectorDialog extends JDialog {
     private void init() {
         setLayout(new BorderLayout());
 
-        final DialogHeader header = new DialogHeader("Copy IPA to Blind Transcription",
-                "Copy data in IPA Tiers for all selected sessions");
+        final DialogHeader header = new DialogHeader("Find and Replace in Project",
+                "Select Project Sessions for Find and Replace in Project");
         add(header, BorderLayout.NORTH);
 
         sessionSelector = new SessionSelector(project);
