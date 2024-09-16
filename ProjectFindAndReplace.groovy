@@ -40,6 +40,7 @@ import ca.phon.ui.CommonModuleFrame
 import ca.phon.ui.decorations.DialogHeader
 import ca.phon.ui.layout.ButtonBarBuilder
 
+import javax.swing.JOptionPane
 import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JFrame
@@ -59,13 +60,27 @@ import java.lang.reflect.Array
  *   - TIERS: tiers to search, a comma separated list or '*' for all tiers
  *   - SHOW_SESSION_SELECTOR: show a session selector dialog, otherwise perform action on all sessions
  */
-                 FIND = "s";
-              REPLACE = "s̪";
+                 FIND = "notranscription";
+              REPLACE = "";
                  TYPE = "plain";
            MATCH_CASE = false;
-                TIERS = "IPA Target";
+                TIERS = "IPA Actual";
 SHOW_SESSION_SELECTOR = true;
 /* End find and replace variables */
+
+/* Display warning dialog before proceeding */
+int result = JOptionPane.showConfirmDialog(
+    null, 
+    "THIS SCRIPT WILL IRREVERSIBLY MODIFY THIS PROJECT. Close and make a backup!\n\nCurrent Settings:\nFind=$FIND\nReplace=$REPLACE\nType=$TYPE\nMatch case=$MATCH_CASE\nTiers=$TIERS\nShow Session Selector=$SHOW_SESSION_SELECTOR\n\nChange settings directly in script.\n\nContinue?", 
+    "WARNING", 
+    JOptionPane.YES_NO_OPTION, 
+    JOptionPane.WARNING_MESSAGE)
+if (result == JOptionPane.YES_OPTION) {
+    // User clicked Yes, continue script
+} else if (result == JOptionPane.NO_OPTION) {
+    // User clicked No, exit script
+    System.exit(0)
+}
 
 /**
  * Create a new FindManager for the given session using find and replace settings above.
